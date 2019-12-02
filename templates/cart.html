@@ -1,0 +1,153 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+<!-- Home -->
+<link rel="stylesheet" type="text/css" href="{% static 'styles/cart.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'styles/cart_responsive.css' %}" />
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
+<div class="home">
+  <div class="home_container">
+    <div class="home_background" style="background-image:url({% static 'images/cart.jpg' %})"></div>
+    <div class="home_content_container">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="home_content">
+              <div class="breadcrumbs">
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/all-products">All products</a></li>
+                  <li><a href="/cart">Shopping Cart</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Info -->
+
+<div class="cart_info">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <!-- Column Titles -->
+        <div class="cart_info_columns clearfix">
+          <div class="cart_info_col cart_info_col_product">Product</div>
+          <div class="cart_info_col cart_info_col_price">Price</div>
+          <div class="cart_info_col cart_info_col_quantity">Quantity</div>
+          <div class="cart_info_col cart_info_col_total">Total</div>
+        </div>
+      </div>
+    </div>
+    <div class="row cart_items_row">
+      <div class="col">
+        <!-- Cart Item -->
+
+        {%for x in container %}
+        <div
+          class="cart_item d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+          <!-- Name -->
+          <div class="cart_item_product d-flex flex-row align-items-center justify-content-start">
+            <div class="cart_item_image">
+              <div><img src="{{ x.product.profileImage | default:'profile.jpg' }}" /></div>
+            </div>
+            <div class="cart_item_name_container">
+              <div class="cart_item_name">
+                <a href="#">{{ x.product.name }}</a>
+              </div>
+              <div style="color: #fff;" class="cart_item_id">{{x.product.pk}}</div>
+              <div class="cart_item_edit"><a href="#">Edit Product</a></div>
+            </div>
+          </div>
+          <!-- Price -->
+          <div class="cart_item_price">${{ x.product.price }}</div>
+          <!-- Quantity -->
+          <div class="cart_item_quantity">
+            <div class="product_quantity_container">
+              <div class="product_quantity clearfix">
+                <span>Qty</span>
+
+                <input id="quantity_input" class="quantity_input{{ forloop.counter }}" type="text" pattern="[0-9]*"
+                  value="{{ x.quantity }}" />
+                <div class="quantity_buttons">
+                  <div id="quantity_inc_button" class="quantity_control quantity_inc{{ forloop.counter }}">
+
+                    <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                  </div>
+                  <div id="quantity_dec_button" class="quantity_control quantity_dec{{ forloop.counter }}">
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!-- Total -->
+          <div class="cart_item_total">${% widthratio x.quantity 1 x.product.price %}</div>
+          <!-- using widthratio for multiplication of quantity and price -->
+        </div>
+        {%endfor%}
+      </div>
+    </div>
+    <div class="row row_cart_buttons">
+      <div class="col">
+        <div class="cart_buttons d-flex flex-lg-row flex-column align-items-start justify-content-start">
+          <div class="button continue_shopping_button"><a href="#">Continue shopping</a></div>
+          <div class="cart_buttons_right ml-lg-auto">
+            <div class="button clear_cart_button"><a href="">Clear cart</a></div>
+            <div class="button update_cart_button"><a href="">Update cart</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row row_extra">
+      <div class="col-lg-4">
+        <!-- Delivery -->
+        <div class="delivery">
+          <div class="section_title">Shipping method</div>
+          <div class="section_subtitle">Select the one you want</div>
+          <div class="delivery_options">
+
+            <label class="delivery_option clearfix">Personal pickup
+              <input type="radio" checked="checked" name="radio" />
+              <span class="checkmark"></span>
+              <span class="delivery_price">Free</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-6 offset-lg-2">
+        <div class="cart_total">
+          <div class="section_title">Cart total</div>
+          <div class="section_subtitle">Final info</div>
+          <div class="cart_total_container">
+            <ul>
+              <li class="d-flex flex-row align-items-center justify-content-start">
+                <div class="cart_total_title">Subtotal</div>
+                <div class="cart_total_value ml-auto">${{cartPrice}}</div>
+              </li>
+              <li class="d-flex flex-row align-items-center justify-content-start">
+                <div class="cart_total_title">Shipping</div>
+                <div class="cart_total_value ml-auto">Free</div>
+              </li>
+              <li class="d-flex flex-row align-items-center justify-content-start">
+                <div class="cart_total_title">Total</div>
+                <div class="cart_total_value ml-auto">${{cartPrice}}</div>
+              </li>
+            </ul>  
+          </div>
+          <div class="button checkout_button"><a href="/checkout">Proceed to checkout</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock content %}
