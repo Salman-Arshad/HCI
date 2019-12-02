@@ -12,6 +12,7 @@ from django.contrib.auth import logout
 from django.contrib.auth import login as auth_login
 from user.models import User
 # Create your views here.
+import time
 
 
 def get_product_count(request):
@@ -191,15 +192,19 @@ def register(request):
             obj = User.objects.get(email=email)
         except Exception as e:
             obj = None
+            return render(request, "register.html",{error:True})
         if obj is None:
             if pass1 == pass2:
-                print("trueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                 user = User(email=email, firstName=fname,
                             lastName=lname, address=address)
                 user.set_password(pass1)
                 user.save()
                 request.session['reg'] = True
                 return redirect("/login")
+            else:
+                return render(request, "register.html",{"error":"Passswords donot match"})
+        else:
+            return render(request, "register.html",{"error":"Email address already exixts"})
 
     return render(request, "register.html")
 
@@ -225,3 +230,4 @@ def checkout(request):
         for i in container:
             totalPrice += i.product.price*i.quantity
     return render(request, 'checkout.html', {"user": user, "qsc": qsc, 'container': container, 'cartPrice': totalPrice, "product_count": get_product_count(request)})
+
